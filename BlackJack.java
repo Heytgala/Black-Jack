@@ -14,20 +14,86 @@ public class BlackJack {
             this.value=value;
             this.type=type;
         }
-        
+
         public String toString() {
             return value + "-" + type;
+        }
+
+        public int getValue(){
+            if("AJQK".contains(value)){
+                if(value=="A"){
+                    return 11;
+                }
+                return 10;
+            }
+            return Integer.parseInt(value);
+        }
+
+        public boolean isAce(){
+            return value == "A";
         }
     }
 
     ArrayList<Card> deck;
+    Random random= new Random();
+
+
+    //DEALER
+    Card hiddenCard;
+    ArrayList<Card> dealerhand;
+    int dealersum;
+    int Dealeracecount;
+
+    //PLAYER
+    ArrayList<Card> playerhand;
+    int playersum;
+    int playeracecount;
 
     BlackJack(){
         startGame();
     }
 
+
     public void startGame(){
         buildDeck();
+        shuffleDeck();
+
+        //DEALER
+        dealerhand = new ArrayList<>();
+        dealersum=0;
+        Dealeracecount=0;
+        hiddenCard = deck.remove(deck.size()-1);
+        dealersum += hiddenCard.getValue();
+
+        Dealeracecount += hiddenCard.isAce() ? 1:0;
+
+        Card card = deck.remove(deck.size()-1);
+        dealersum +=card.getValue();
+        Dealeracecount += card.isAce() ? 1:0;
+        dealerhand.add(card);
+
+        System.out.println("Dealer's Card:");
+        System.out.println(hiddenCard);
+        System.out.println(dealerhand);
+        System.out.println(dealersum);
+        System.out.println(Dealeracecount);
+
+        //PLAYER
+        playerhand = new ArrayList<>();
+        playersum=0;
+        playeracecount=0;
+        
+        for(int i=0; i<2; i++){
+            card = deck.remove(deck.size()-1);
+            playersum+=card.getValue();
+            playeracecount+=card.isAce() ? 1: 0;
+            playerhand.add(card);
+        }
+
+        System.out.println("Player's Card:");
+        System.out.println(playerhand);
+        System.out.println(playersum);
+        System.out.println(playeracecount);
     }
 
     public void buildDeck(){
@@ -43,6 +109,18 @@ public class BlackJack {
         }
 
         System.out.println("Build Deck:");
+        System.out.println(deck);
+    }
+
+    public void shuffleDeck() {
+        for(int i=0;i<deck.size();i++){
+            int j= random.nextInt(deck.size());
+            Card currentcard= deck.get(i);
+            Card randomcard = deck.get(j);
+            deck.set(i, randomcard);
+            deck.set(j,currentcard);
+        }
+        System.out.println("After Shuffling the card");
         System.out.println(deck);
     }
 }
